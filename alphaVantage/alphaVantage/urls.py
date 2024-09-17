@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+import stockVisualiser.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("", stockVisualiser.views.home),
+    path('get_stock_data/', stockVisualiser.views.get_stock_data),
 ]
