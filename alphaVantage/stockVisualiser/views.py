@@ -14,10 +14,13 @@ APIKEY = 'EPM8MUYDLLTJHU0D'
 DATABASE_ACCESS = True 
 #if False, the app will always query the Alpha Vantage APIs regardless of whether the stock data for a given ticker is already in the local database
 
+def forex(request):
+    return render(request, 'forex.html', {})
 
 #view function for rendering home.html
 def home(request):
     return render(request, 'home.html', {})
+
 
 @csrf_exempt
 def get_stock_data(request):
@@ -33,7 +36,8 @@ def get_stock_data(request):
                 #We have the data in our database! Get the data from the database directly and send it back to the frontend AJAX call
                 entry = StockData.objects.filter(symbol=ticker)[0]
                 print("1st inside views")
-                print("test", entry.symbol)
+                print("2nd inside views", entry.symbol)
+                print("3rd if already exisits")
                 return HttpResponse(entry.data, content_type='application/json')
             print("in here 2")
 
@@ -44,10 +48,14 @@ def get_stock_data(request):
         #get SMA (simple moving average) data
         sma_series = requests.get(f'https://www.alphavantage.co/query?function=SMA&symbol={ticker}&interval=daily&time_period=10&series_type=close&apikey={APIKEY}').json()
 
+        #test
+        daily_price = requests.get(f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&outputsize=full&apikey={APIKEY}').json()
+        print("TEST for daily", daily_price)
         #package up the data in an output dictionary 
         output_dictionary = {}
         output_dictionary['prices'] = price_series
         output_dictionary['sma'] = sma_series
+        output_dictionary['daily'] = daily_price
 
         #save the dictionary to database
         temp = StockData(symbol=ticker, data=json.dumps(output_dictionary))
