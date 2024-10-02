@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import StockData
+from .models import StockData, ForexData
 
 import requests
 import json
@@ -16,6 +16,35 @@ DATABASE_ACCESS = True
 
 def forex(request):
     return render(request, 'forex.html', {})
+
+@csrf_exempt
+def get_forex_data(request):
+    if request.is_ajax():
+        symbol = request.POST.get('symbol', 'null')
+        print("2nd forex test in views for symbol", symbol)
+        tempSymbol = "EURUSD"
+
+        if DATABASE_ACCESS == True:
+            #checking if the database already has data stored for this ticker before querying the Alpha Vantage API
+            if ForexData.objects.filter(symbol=symbol).exists():
+                print("1st in views for forex", symbol, tempSymbol) 
+                #We have the data in our database! Get the data from the database directly and send it back to the frontend AJAX call
+                entry = ForexData.objects.filter(symbol=symbol)[0]
+                print("TEST3", entry.data)
+                return HttpResponse(entry.data, content_type='application/json')
+            print("in here 2")
+
+        forex_data = requests.get(f'https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&apikey={APIKEY}').json()
+        print("second forex test in views", forex_data)
+
+        forex_output = {}
+        forex_output['prices'] = forex_data
+
+        tempForex = ForexData(symbol=symbol, data=json.dumps(forex_output))
+        tempForex.save()
+
+    return HttpResponse(json.dumps(forex_output), content_type='application/json')
+
 
 #view function for rendering home.html
 def home(request):

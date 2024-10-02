@@ -30,7 +30,6 @@
     $(document).ready(function(){
         // Right after the page is loaded, we get the stock data (default to AAPL) from the Django backend (the 'get_stock_data' function) for plotting
         
-        random = [1,2,3,4,5]
         $.ajax({
               type: "POST",
               url: "/get_stock_data/",

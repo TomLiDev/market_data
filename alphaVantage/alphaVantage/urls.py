@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", stockVisualiser.views.home),
     path('get_stock_data/', stockVisualiser.views.get_stock_data),
-    path("forex/", stockVisualiser.views.forex)
+    path("forex/", stockVisualiser.views.forex),
+    path('get_forex_data/', stockVisualiser.views.get_forex_data),
 ]
