@@ -30,7 +30,6 @@ def get_forex_data(request):
                 print("1st in views for forex", symbol, tempSymbol) 
                 #We have the data in our database! Get the data from the database directly and send it back to the frontend AJAX call
                 entry = ForexData.objects.filter(symbol=symbol)[0]
-                print("TEST3", entry.data)
                 return HttpResponse(entry.data, content_type='application/json')
             print("in here 2")
 

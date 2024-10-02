@@ -18,7 +18,8 @@
     </div>
 
     <script>
-
+        /* This is largely a copy of the script from the home.html, data is passed from the back end via the view (either 
+        directly from the API call or the database if the data exists already), and is processed here in the JS script*/
         $(document).ready(function(){
             console.log("Early test")
             $.ajax({
@@ -32,20 +33,11 @@
                     daily_data = res["prices"]["Time Series FX (Daily)"]
                     console.log("Forex 2nd test for usable data", daily_data)
                     daily_series = [];
-                    console.log("3rd", daily_data["2024-09-27"])
-                    console.log("fghdj", daily_data["2024-09-27"]["4. close"])
-                    thing = daily_data["2024-09-27"]["4. close"]
-                    
-                    console.log(thing)
-                    parseFloat(thing)
-                    console.log(parseFloat(thing))
 
                     daily_data_parse = function(){
                     for (let key in daily_data) {
-                        console.log(key)
-                        console.log(daily_data[key])
-                        console.log(daily_series[key]["4. close"])
-                        daily_series.push(Number(daily_series[key]["4. close"]));
+                        actual = parseFloat(daily_data[key]["4. close"])
+                        daily_series.push(actual);
                     }
 
                     };
@@ -59,7 +51,7 @@
                         data: {
                             datasets: [{
                                 label: 'Test',
-                                data: daily_prices
+                                data: daily_series
                             }]
                         }
                     });
