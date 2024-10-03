@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <!--<link rel="stylesheet" href="style.css">-->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <title>Stock Visualizer</title>
-    </head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 
+<h2>
+    I am the forex page
+</h2>
 
-    <h2>
-        This is a placeholder, baby!
-    </h2>
-
-    <div id="graph-area" style="height:80%; width:80%;">
-        <canvas id="chart"></canvas>
-    </div>
+<div id="graph-area" style="height:80%; width:80%;">
+    <canvas id="chart"></canvas>
+</div>
 
     <script>
         /* This is largely a copy of the script from the home.html, data is passed from the back end via the view (either 
@@ -32,22 +24,25 @@
                     console.log("Forex test within JS", res)
                     daily_data = res["prices"]["Time Series FX (Daily)"]
                     console.log("Forex 2nd test for usable data", daily_data)
-                    daily_series = [];
+                    daily_close_series = [];
+                    daily_open_series = [];
                     dates = [];
 
                     daily_data_parse = function(){
                     for (let key in daily_data) {
-                        console.log("key", key, typeof(key))
                         actual = parseFloat(daily_data[key]["4. close"])
-                        daily_series.push(actual);
+                        open = parseFloat(daily_data[key]["1. open"])
+                        daily_close_series.push(actual)
+                        daily_open_series.push(open)
                         dates.push(String(key))
                     }
 
                     };
                     daily_data_parse();
 
-                    console.log("Complete data", daily_series)
-                    console.log("DATES", dates)
+                    daily_close_series.reverse()
+                    daily_open_series.reverse()
+                    dates.reverse()
                     
                     var ctx = document.getElementById('chart').getContext('2d');
                     ctx.canvas.width = 800;
@@ -56,28 +51,36 @@
                     type: 'line',
                         data: {
                             labels: dates,
-                            datasets: [{
+                            datasets: [
+                                {
                                 label: 'Daily Close Price',
-                                data: daily_series,
+                                data: daily_close_series,
                                 backgroundColor: [
-                                    'green',
+                                    'red',
                                 ],
                                 borderColor: [
-                                    'green',
+                                    'red',
                                 ],
                                 borderWidth: 1
-                            }]
+                            },
+                            {
+                                label: 'Open Price',
+                                data: daily_open_series,
+                                backgroundColor: [
+                                    'blue',
+                                ],
+                                borderColor: [
+                                    'blue',
+                                ],
+                                borderWidth: 1
+                            },
+                        ]
                         },
                     });
                 }
             })
         })
 
-    </script>
+</script>
 
-    <div>
-
-    </div>
-</body>
-
-</html>
+{% endblock %}
