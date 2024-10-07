@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
+    {% load static %}
 <head>
     <!--<link rel="stylesheet" href="style.css">-->
+    <meta name="keywords" content="markets finance data stocks forex charts">
+    <meta description="A site for those interested in viewing and analysing the data of financial markets">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>Stock Visualizer</title>
+    <link href="../static/css/style.css">
+    <link href="{% static 'css/style.css' %}">
+    <link href="style.css">
+    <title>Financial Market Data Visualiser</title>
 </head>
 
     <nav>
