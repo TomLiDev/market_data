@@ -137,6 +137,7 @@
             // when the user specifies a new ticker, we call the Django backend (the 'get_stock_data' function) to get the stock data and refresh the graph. 
             // obtain the ticker string from the input textbox
             var tickerText = $('#ticker-input').val();
+            console.log("submit test", tickerText)
             $.ajax({
                   type: "POST",
                   url: "/get_stock_data/",

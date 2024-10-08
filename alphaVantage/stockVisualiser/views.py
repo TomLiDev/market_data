@@ -21,6 +21,7 @@ def forex(request):
 def get_forex_data(request):
     if request.is_ajax():
         symbol = request.POST.get('symbol', 'null')
+        symbol = symbol.upper()
         print("2nd forex test in views for symbol", symbol)
         tempSymbol = "EURUSD"
 
@@ -33,7 +34,7 @@ def get_forex_data(request):
                 return HttpResponse(entry.data, content_type='application/json')
             print("in here 2")
 
-        forex_data = requests.get(f'https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&apikey={APIKEY}').json()
+        forex_data = requests.get(f'https://www.alphavantage.co/query?function=FX_DAILY&from_symbol={symbol}&to_symbol=USD&apikey={APIKEY}').json()
         print("second forex test in views", forex_data)
 
         forex_output = {}

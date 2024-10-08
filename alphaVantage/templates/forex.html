@@ -88,6 +88,87 @@
             })
         })
 
+        /* This section controls what happens when submit is clicked from the forex chart page */
+        
+        $('#fx-pair-submit-btn').click(function() {
+            // when the user specifies a new ticker, we call the Django backend to get the forex data and refresh the graph. 
+            // obtain the symbol string from the input textbox
+            console.log("first from submit")
+            var symbol = $('#fx-pair-input').val();
+            console.log("symbol test from submit", symbol)
+            $.ajax({
+                  type: "POST",
+                  url: "/get_forex_data/",
+                  data: {
+                     'symbol': symbol,
+                  },
+                  success: function (res, status) {
+                    console.log("Forex test within JS", res)
+                    daily_data = res["prices"]["Time Series FX (Daily)"]
+                    console.log("Forex 2nd test for usable data", daily_data)
+                    daily_close_series = [];
+                    daily_open_series = [];
+                    dates = [];
+
+                    var symbol = res['prices']['Meta Data']['2: From Symbol'];
+                    console.log("later symbol test", symbol)
+
+                    daily_data_parse = function(){
+                    for (let key in daily_data) {
+                        actual = parseFloat(daily_data[key]["4. close"])
+                        open = parseFloat(daily_data[key]["1. open"])
+                        daily_close_series.push(actual)
+                        daily_open_series.push(open)
+                        dates.push(String(key))
+                    }
+
+                    };
+                    daily_data_parse();
+
+                    daily_close_series.reverse()
+                    daily_open_series.reverse()
+                    dates.reverse()
+
+                    $('#chart').remove(); // this is my <canvas> element
+                    $('#graph-area').append('<canvas id="chart"><canvas>');
+                    
+                    var ctx = document.getElementById('chart').getContext('2d');
+                    ctx.canvas.width = 800;
+                    ctx.canvas.height = 400;
+                    var chart = new Chart(ctx, {
+                    type: 'line',
+                        data: {
+                            labels: dates,
+                            datasets: [
+                                {
+                                label: 'Daily Close Price',
+                                data: daily_close_series,
+                                backgroundColor: [
+                                    'red',
+                                ],
+                                borderColor: [
+                                    'red',
+                                ],
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Open Price',
+                                data: daily_open_series,
+                                backgroundColor: [
+                                    'blue',
+                                ],
+                                borderColor: [
+                                    'blue',
+                                ],
+                                borderWidth: 1
+                            },
+                        ]
+                        },
+                    });
+                }
+            });
+        });
+
 </script>
 
 {% endblock %}
