@@ -1,13 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 from .models import StockData, ForexData
 
 import requests
 import json
+import env
+import os
 
-
-APIKEY = 'EPM8MUYDLLTJHU0D' 
+APIKEY =  os.getenv('API_KEY')
 #replace 'my_alphav_api_key' with your actual Alpha Vantage API key obtained from https://www.alphavantage.co/support/#api-key
 
 

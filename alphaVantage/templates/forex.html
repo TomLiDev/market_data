@@ -12,6 +12,19 @@
     <input type="button" value="submit" id="fx-pair-submit-btn">
     <br>
 
+    <br>
+
+    <div>
+        <label for="fx-high-request-btn">Show High and Low Prices</label>
+        <input type="button" value="Show" id="fx-high-request-btn"> 
+    </div>
+    <div>
+        <span id="high" style="height: auto;"></span>
+        <br>
+        <span id="low" style="height: auto;"></span>
+    </div>
+
+
 <div id="graph-area" style="height:80%; width:80%;">
     <canvas id="chart"></canvas>
 </div>
@@ -168,7 +181,51 @@
                 }
             });
         });
+        
+
+        /* Below is experiement to see what can be done with JS to get high/low prices */
+        $('#fx-high-request-btn').click(function() {
+            console.log("button working")
+            $.ajax({
+                  type: "POST",
+                  url: "/get_forex_data/",
+                  data: {
+                     'symbol': 'EURUSD',
+                  },
+                  success: function (res, status) {
+                    console.log("Forex test within JS", res)
+                    daily_data = res["prices"]["Time Series FX (Daily)"]
+                    console.log("Forex 2nd test for usable data", daily_data)
+                    daily_close_series = [];
+                    daily_open_series = [];
+                    dates = [];
+
+                    daily_data_parse = function(){
+                    for (let key in daily_data) {
+                        actual = parseFloat(daily_data[key]["4. close"])
+                        open = parseFloat(daily_data[key]["1. open"])
+                        daily_close_series.push(actual)
+                        daily_open_series.push(open)
+                        dates.push(String(key))
+                    }
+
+                    };
+                    daily_data_parse();
+
+                    high = Math.max.apply(Math, daily_close_series)
+                    low = Math.min.apply(Math, daily_close_series)
+
+                    console.log("high price", + high)
+                    console.log("low price", low)
+
+                    document.getElementById("high").innerHTML = high
+                    document.getElementById("low").innerHTML = low
+                  }
+            })
+        })
 
 </script>
+
+
 
 {% endblock %}
