@@ -215,11 +215,25 @@
                     high = Math.max.apply(Math, daily_close_series)
                     low = Math.min.apply(Math, daily_close_series)
 
-                    console.log("high price", + high)
-                    console.log("low price", low)
+                    high_index = daily_close_series.indexOf(high)
+                    low_index = daily_close_series.indexOf(low)
+                    high_date = dates[high_index]
+                    low_date = dates[low_index]
 
-                    document.getElementById("high").innerHTML = high
-                    document.getElementById("low").innerHTML = low
+                    console.log("high price", high)
+                    console.log("low price", low)
+                    console.log("Dates test", high_date, low_date)
+
+                    document.getElementById("high").innerHTML = high + "  " + high_date
+                    document.getElementById("low").innerHTML = low + "  " + low_date
+
+                    section = daily_close_series.slice(30)
+
+                    close_high = Math.max.apply(Math, section)
+                    console.log("2nd low", close_high)
+                    max_point = daily_close_series.indexOf(close_high)
+                    console.log(max_point)
+                    console.log(dates[max_point])
                   }
             })
         })
