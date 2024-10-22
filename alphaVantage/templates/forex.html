@@ -212,6 +212,10 @@
                     };
                     daily_data_parse();
 
+                    daily_close_series.reverse()
+                    daily_open_series.reverse()
+                    dates.reverse()
+
                     high = Math.max.apply(Math, daily_close_series)
                     low = Math.min.apply(Math, daily_close_series)
 
@@ -224,16 +228,51 @@
                     console.log("low price", low)
                     console.log("Dates test", high_date, low_date)
 
-                    document.getElementById("high").innerHTML = high + "  " + high_date
-                    document.getElementById("low").innerHTML = low + "  " + low_date
+                    document.getElementById("high").innerHTML = `Highest Price and Date ${high} ${high_date}`
+                    document.getElementById("low").innerHTML = `Lowest Price and Date ${low} ${low_date}`
 
-                    section = daily_close_series.slice(30)
+                    random_start = 1.11
+                    x = 0
 
-                    close_high = Math.max.apply(Math, section)
-                    console.log("2nd low", close_high)
-                    max_point = daily_close_series.indexOf(close_high)
-                    console.log(max_point)
-                    console.log(dates[max_point])
+                    high_points = {};
+
+                    for (let i = 0; i < daily_close_series.length; i++) {
+                        if (daily_close_series[i] > random_start) {
+                            x += 1
+                            high_high = daily_close_series[i]
+                            cut_series = daily_close_series.slice(i)
+                            /*tempFunc(i, x, high_high, cut_series)*/
+                            key = dates[i]
+                            price = daily_close_series[i]
+                            indexNo = i
+                            high_points[key] = price
+                            high_points[key] = i
+                            console.log("inside first loop", dates[i], high_points)
+                        }
+                    }
+                    console.log("Second console", high_points)
+
+
+                    for (let a = 0; a < high_points.length; a++) {
+                        console.log(high_points[a]["Index No"])
+                    }
+
+                    /* Below is a temporary experiment function which is currently not being used, may be axed */
+
+                    function tempFunc(i, x, high_high, cut_series) {
+                        console.log("Split function call", i, dates[i], high_high, x)
+                        for (let z = 0; z < cut_series.length; z++) {
+                            if (cut_series[z] > high_high) {
+                                high_high = cut_series[z]
+                                console.log("inside second loop", i, dates[i], z, cut_series[z], x)
+                                check = true
+                            } 
+                            else if (check = true && cut_series[z] < high_high) {
+                                console.log("third if", dates[i])
+                            }
+                        }
+                    }
+                    /*These brackets below close the overall Ajax call*/
                   }
             })
         })
